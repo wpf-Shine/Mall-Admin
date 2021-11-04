@@ -24,10 +24,17 @@
             type="password"
             placeholder="Password"
             prefix-icon="iconfont icon-3702mima"
+            @keyup.enter.native="login"
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button
+            type="primary"
+            @click="login"
+            :loading="loadingbut"
+            :disabled="isDisabled"
+            >登录</el-button
+          >
           <el-button type="info" @click="resetLoginFrom">重置</el-button>
         </el-form-item>
       </el-form>
@@ -46,6 +53,9 @@ export default {
         username: '',
         password: '',
       },
+      loadingbut: false,
+      loadingbuttext: '登录',
+      isDisabled: false,
       // 表单的验证规则
       loginFromRules: {
         username: [
@@ -73,17 +83,33 @@ export default {
     //点击重置
     resetLoginFrom() {
       this.$refs.loginFromRef.resetFields()
+      this.btninitialization()
+    },
+    btninitialization() {
+      this.loadingbut = false
+      this.loadingbuttext = '登录'
+      this.isDisabled = false
     },
     login() {
+      this.loadingbut = true
+      this.isDisabled = true
+      this.loadingbuttext = '登录中...'
       this.$refs.loginFromRef.validate(async (valid) => {
-        if (!valid) return
+        if (!valid) {
+          this.btninitialization()
+          return
+        }
         const result = await getLogin(
           this.loginFrom.username,
           this.loginFrom.password
         )
-        if (result.meta.status != 200)
+        if (result.meta.status != 200) {
+          this.btninitialization()
           return this.$message.error(result.meta.msg)
+        }
+
         this.$message.success('登录成功！')
+        this.btninitialization()
         // 登录成功后将获得的token保存到客户端的sessionStorage中
         window.sessionStorage.setItem('token', result.data.token)
         // 登录成功后跳转到后台首页
