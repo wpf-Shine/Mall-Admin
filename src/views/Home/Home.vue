@@ -35,9 +35,12 @@
           unique-opened
           :collapse="iscollapse"
           :collapse-transition="false"
+          router
+          :default-active="activePath"
         >
+          <!-- 一级菜单 -->
           <el-submenu
-            :index="item.id + ''"
+            :index="item.path"
             v-for="item in menulist"
             :key="item.id"
           >
@@ -45,10 +48,12 @@
               <i :class="iconsObj[item.id]"></i>
               <span>{{ item.authName }}</span>
             </template>
+            <!-- 二级菜单 -->
             <el-menu-item
-              :index="subitem.id + ''"
+              :index="'/' + subitem.path"
               v-for="subitem in item.children"
               :key="subitem.id"
+              @click="saveNavState('/' + subitem.path)"
               ><template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{ subitem.authName }}</span>
@@ -58,7 +63,9 @@
         </el-menu>
       </el-aside>
       <!-- 主体 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -78,10 +85,13 @@ export default {
         145: 'iconfont icon-baobiao',
       },
       iscollapse: false,
+      // 被激活的链接地址
+      activePath: '',
     }
   },
   created() {
     this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     // 获取菜单
@@ -91,7 +101,6 @@ export default {
       if (res.meta.status != 200) return this.$message.error(res.meta.msg)
       // 请求成功
       this.menulist = res.data
-      console.log(this.menulist)
     },
     // 切换菜单的折叠和展开
     toggleCollapse() {
@@ -101,6 +110,11 @@ export default {
     loginOut() {
       window.sessionStorage.clear('token')
       this.$router.push('/login')
+    },
+    // 保存连接的状态
+    saveNavState(activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     },
   },
 }
