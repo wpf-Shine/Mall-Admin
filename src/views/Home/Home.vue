@@ -64,7 +64,7 @@
       </el-aside>
       <!-- 主体 -->
       <el-main>
-        <router-view></router-view>
+        <router-view v-if="isRouterAlive"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -74,6 +74,11 @@
 import { getMenuList } from '@/network/menu'
 export default {
   name: 'Home',
+  provide() {
+    return {
+      reload: this.reload,
+    }
+  },
   data() {
     return {
       menulist: [],
@@ -87,6 +92,8 @@ export default {
       iscollapse: false,
       // 被激活的链接地址
       activePath: '',
+      // 用于实现页面刷新
+      isRouterAlive: true,
     }
   },
   created() {
@@ -108,13 +115,31 @@ export default {
     },
     // 退出
     loginOut() {
-      window.sessionStorage.clear('token')
-      this.$router.push('/login')
+      this.$confirm('确定退出吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          window.sessionStorage.clear('token')
+          this.$router.push('/login')
+          this.$message({ type: 'success', message: '退出成功!' })
+        })
+        .catch(() => {
+          this.$message({ type: 'info', message: '已取消退出！' })
+        })
     },
     // 保存连接的状态
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
+    },
+    // 用于实现页面刷新
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
     },
   },
 }
