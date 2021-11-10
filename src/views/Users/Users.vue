@@ -42,7 +42,7 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.mg_state"
-              @change="userStateChange(scope.row.id, scope.row.mg_state)"
+              @change="userStateChange(scope.row, scope.row.mg_state)"
             ></el-switch>
           </template>
         </el-table-column>
@@ -183,7 +183,6 @@ import {
 
 export default {
   name: 'Users',
-  inject: ['reload'],
   data() {
     // 自定义规则
     let checkEmail = (rule, value, callback) => {
@@ -291,10 +290,11 @@ export default {
       this.getUserList()
     },
     // 改变用户状态
-    async userStateChange(uid, type) {
-      const res = await getUserState(uid, type)
+    async userStateChange(row, type) {
+      const res = await getUserState(row.id, type)
       if (res.meta.status != 200) {
-        this.reload()
+        // this.reload()
+        row.mg_state = !row.mg_state
         return this.$message.error('更新状态失败：' + res.meta.msg)
       }
       this.$message.success(res.meta.msg)
