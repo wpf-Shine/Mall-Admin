@@ -90,6 +90,7 @@
                 icon="el-icon-setting"
                 circle
                 size="mini"
+                @click="showSetRoleDialog(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -156,6 +157,42 @@
           <el-button type="primary" @click="editUser">确 定</el-button>
         </span>
       </el-dialog>
+      <!-- 分配角色 -->
+      <el-dialog
+        title="分配角色"
+        :visible.sync="editRoleDialogVisible"
+        width="50%"
+        @close="setRoleDialogClosed"
+      >
+        <div>
+          <p>
+            当前用户：<el-tag>{{ this.userInfo.username }}</el-tag>
+          </p>
+          <p>
+            当前角色：<el-tag type="success">{{
+              this.userInfo.role_name
+            }}</el-tag>
+          </p>
+          <p>
+            分配新角色：<el-select
+              v-model="selectedRoleId"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in rolesList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editRoleDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="btnEditRole">确 定</el-button>
+        </span>
+      </el-dialog>
       <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
@@ -179,11 +216,12 @@ import {
   getUser,
   editUser,
   delUser,
+  getRoles,
+  setRole,
 } from '@/network/users'
 
 export default {
   name: 'Users',
-  inject: ['reload'],
   data() {
     // 自定义规则
     let checkEmail = (rule, value, callback) => {
@@ -211,9 +249,13 @@ export default {
         pagesize: 2,
       },
       userList: [],
+      rolesList: [],
+      selectedRoleId: '',
       total: 0,
       addDialogVisible: false,
       editDialogVisible: false,
+      editRoleDialogVisible: false,
+      userInfo: {},
       // 添加用户的表单数据
       addForm: {
         username: '',
@@ -294,7 +336,6 @@ export default {
     async userStateChange(uid, type) {
       const res = await getUserState(uid, type)
       if (res.meta.status != 200) {
-        this.reload()
         return this.$message.error('更新状态失败：' + res.meta.msg)
       }
       this.$message.success(res.meta.msg)
@@ -363,6 +404,29 @@ export default {
 
       this.$message.success(res.meta.msg)
       this.getUserList()
+    },
+    // 点击分配角色
+    async showSetRoleDialog(user) {
+      this.userInfo = user
+      const res = await getRoles()
+      if (res.meta.status != 200) return this.$message.error('获取角色列表失败')
+      this.rolesList = res.data
+      this.editRoleDialogVisible = true
+    },
+    // 点击确认分配角色
+    async btnEditRole() {
+      if (!this.selectedRoleId) return this.$message.error('请选择要分配的角色')
+      const res = await setRole(this.userInfo.id, { rid: this.selectedRoleId })
+      if (res.meta.status != 200)
+        return this.$message.error('更新角色失败：' + res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.editRoleDialogVisible = false
+      this.getUserList()
+    },
+    // 分配角色的Dialog关闭
+    setRoleDialogClosed() {
+      this.selectedRoleId = ''
+      this.userInfo = ''
     },
   },
 }

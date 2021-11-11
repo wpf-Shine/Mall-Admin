@@ -64,7 +64,7 @@
       </el-aside>
       <!-- 主体 -->
       <el-main>
-        <router-view v-if="isRouterAlive"></router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -92,8 +92,6 @@ export default {
       iscollapse: false,
       // 被激活的链接地址
       activePath: '',
-      // 用于实现页面刷新
-      isRouterAlive: true,
     }
   },
   created() {
@@ -133,13 +131,6 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
-    },
-    // 用于实现页面刷新
-    reload() {
-      this.isRouterAlive = false
-      this.$nextTick(function () {
-        this.isRouterAlive = true
-      })
     },
   },
 }
