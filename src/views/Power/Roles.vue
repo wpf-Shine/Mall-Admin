@@ -231,7 +231,6 @@ export default {
       if (res.meta.status != 200)
         return this.$message.error('获取失败：' + res.meta.msg)
       this.rolesList = res.data
-      console.log(res.data)
     },
     // 添加角色
     btnAddRoles() {

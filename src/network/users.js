@@ -52,13 +52,6 @@ export function delUser(id) {
   })
 }
 
-// 角色列表
-export function getRoles() {
-  return request({
-    url: 'roles',
-    method: 'get'
-  })
-}
 
 // 分配角色
 export function setRole(id, data) {

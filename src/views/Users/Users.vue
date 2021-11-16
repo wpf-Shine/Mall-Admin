@@ -216,10 +216,10 @@ import {
   getUser,
   editUser,
   delUser,
-  getRoles,
   setRole,
 } from '@/network/users'
 
+import { getRoles } from '@/network/power'
 export default {
   name: 'Users',
   data() {
