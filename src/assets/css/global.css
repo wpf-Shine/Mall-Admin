@@ -20,3 +20,7 @@ body,
 .el-table,.zk-table{
   margin: 15px 0;
 }
+
+.el-cascader{
+  width: 100%;
+}
