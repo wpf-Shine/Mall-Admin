@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <el-header>
       <div>
-        <img class="shoplogo" src="@/assets/heima.png" alt="" />
+        <img class="shoplogo" src="@/assets/home.png" alt="" />
         <span>电商后台管理系统</span>
       </div>
       <el-row>

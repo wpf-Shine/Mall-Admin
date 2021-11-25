@@ -89,19 +89,7 @@
           <el-input v-model="addCateForm.cat_name"></el-input>
         </el-form-item>
         <el-form-item label="父级分类">
-          <div class="block">
-            <el-cascader
-              expand-trigger="hover"
-              v-model="selectedKeys"
-              :props="cascaderProps"
-              :options="parentCateList"
-              @change="parentCateChange"
-              clearable
-              change-on-select
-            >
-              ></el-cascader
-            >
-          </div>
+          <Cascader @parentCateChange="parentCateChange"></Cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -136,6 +124,7 @@
 
 <script>
 import { getCategories, addCate, delCate, editCate } from '@/network/goods'
+import Cascader from '@/component/common/Cascader'
 
 export default {
   name: 'Cate',
@@ -172,14 +161,6 @@ export default {
           { required: true, message: '请输入分类名称', trigger: 'blur' },
         ],
       },
-      // 父级分类列表
-      parentCateList: [],
-      // 级联选择器的配置对象
-      cascaderProps: {
-        value: 'cat_id',
-        label: 'cat_name',
-        children: 'children',
-      },
       // 选中的父级分类的id数组
       selectedKeys: [],
       // 为table指定列的定义
@@ -212,6 +193,9 @@ export default {
       ],
     }
   },
+  components: {
+    Cascader,
+  },
   created() {
     this.getCateList()
   },
@@ -237,18 +221,11 @@ export default {
     },
     // 添加分类
     showAddDialog() {
-      this.getParentCateList()
       this.addDialogVisible = true
     },
-    // 获取父级分类的数据
-    async getParentCateList() {
-      const res = await getCategories(2)
-      if (res.meta.status != 200)
-        return this.$message.error('获取父级分类失败：' + res.meta.msg)
-      this.parentCateList = res.data
-    },
-    // 级联选择器发生变化
-    parentCateChange() {
+    // 子组件自定义事件
+    parentCateChange(data) {
+      this.selectedKeys = data
       if (this.selectedKeys.length > 0) {
         // 父级分类的id
         this.addCateForm.cat_pid =
@@ -328,5 +305,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+.el-cascader {
+  width: 100%;
+}
 </style>
