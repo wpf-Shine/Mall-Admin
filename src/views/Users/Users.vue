@@ -9,27 +9,12 @@
     <!-- 卡片 -->
     <el-card>
       <!-- 搜索与添加 -->
-      <el-row :gutter="20">
-        <el-col :span="7"
-          ><el-input
-            placeholder="请输入内容"
-            clearable
-            v-model="queryInfo.query"
-            @clear="getUserList"
-            @keyup.enter.native="getUserList"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getUserList"
-            ></el-button> </el-input
-        ></el-col>
-        <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true"
-            >添加用户</el-button
-          ></el-col
-        ></el-row
-      >
+      <Searchadd
+        @btnAdd="btnAdd"
+        @getList="getUserList"
+        type="用户"
+        ref="searchRefs"
+      ></Searchadd>
       <!-- 用户列表 -->
       <el-table :data="userList" style="width: 100%" border stripe>
         <el-table-column type="index"></el-table-column>
@@ -218,6 +203,7 @@ import {
   delUser,
   setRole,
 } from '@/network/users'
+import Searchadd from '@/component/common/Searchadd'
 
 import { getRoles } from '@/network/power'
 export default {
@@ -242,12 +228,6 @@ export default {
       }
     }
     return {
-      // 获取用户列表参数对象
-      queryInfo: {
-        query: '',
-        pagenum: 1,
-        pagesize: 2,
-      },
       userList: [],
       rolesList: [],
       selectedRoleId: '',
@@ -256,6 +236,10 @@ export default {
       editDialogVisible: false,
       editRoleDialogVisible: false,
       userInfo: {},
+      queryInfo: {
+        pagenum: 1,
+        pagesize: 2,
+      },
       // 添加用户的表单数据
       addForm: {
         username: '',
@@ -305,13 +289,19 @@ export default {
       },
     }
   },
+  components: {
+    Searchadd,
+  },
   created() {
     this.getUserList()
   },
   methods: {
-    async getUserList() {
+    btnAdd(data) {
+      this.addDialogVisible = data
+    },
+    async getUserList(query) {
       const res = await getUserList(
-        this.queryInfo.query,
+        query,
         this.queryInfo.pagenum,
         this.queryInfo.pagesize
       )

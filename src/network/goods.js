@@ -87,3 +87,21 @@ export function upParams(id, attrId, data) {
     data
   })
 }
+
+// 商品列表
+export function getGoodsList(query, pagenum, pagesize) {
+  return request({
+    url: 'goods',
+    method: 'get',
+    params: {
+      query, pagenum, pagesize
+    }
+  })
+}
+
+export function delGood(id) {
+  return request({
+    url: 'goods/' + id,
+    method: 'delete'
+  })
+}
