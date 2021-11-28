@@ -11,7 +11,7 @@ const Cate = () => import('@/views/Goods/Cate')
 const Params = () => import('@/views/Goods/Params')
 const Goods = () => import('@/views/Goods/index')
 const Addgoods = () => import('@/views/Goods/Addgoods')
-
+const Editgoods = () => import('@/views/Goods/Editgoods')
 
 Vue.use(Router)
 
@@ -61,6 +61,10 @@ const router = new Router({
         {
           path: '/goods/add',
           component: Addgoods
+        },
+        {
+          path: '/goods/edit',
+          component: Editgoods
         }
       ]
     }

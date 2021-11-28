@@ -113,3 +113,18 @@ export function addGoods(data) {
     data
   })
 }
+
+export function getGoodsById(id) {
+  return request({
+    url: 'goods/' + id,
+    method: 'get'
+  })
+}
+
+export function editGoods(id, data) {
+  return request({
+    url: 'goods/' + id,
+    method: 'put',
+    data
+  })
+}

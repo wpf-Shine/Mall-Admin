@@ -1,5 +1,6 @@
 <template>
   <el-cascader
+    :disabled="disabled"
     expand-trigger="hover"
     v-model="selectedKeys"
     :props="cascaderProps"
@@ -16,6 +17,9 @@
 import { getCategories } from '@/network/goods'
 export default {
   name: 'Cascader',
+  props: {
+    disabled: { type: Boolean, default: false },
+  },
   data() {
     return {
       // 父级分类列表

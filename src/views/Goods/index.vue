@@ -38,7 +38,11 @@
         </el-table-column>
         <el-table-column label="操作" width="200px">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit"
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-edit"
+              @click="goEditPage(scope.row.goods_id)"
               >编辑</el-button
             >
             <el-button
@@ -130,6 +134,14 @@ export default {
     // 跳转添加商品页面
     goAddPage() {
       this.$router.push('/goods/add')
+    },
+    goEditPage(id) {
+      this.$router.push({
+        path: '/goods/edit',
+        query: {
+          id,
+        },
+      })
     },
   },
   computed: {
