@@ -105,3 +105,11 @@ export function delGood(id) {
     method: 'delete'
   })
 }
+
+export function addGoods(data) {
+  return request({
+    url: 'goods',
+    method: 'post',
+    data
+  })
+}

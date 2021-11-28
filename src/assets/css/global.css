@@ -21,4 +21,18 @@ body,
   margin: 15px 0;
 }
 
+.el-steps{
+  margin: 15px 0;
+  justify-content: center;
+}
+.el-step__title{
+  font-size: 12px;
+}
+.ql-editor {
+  min-height: 300px;
+  
+}
+.quill-editor{
+  margin-bottom: 10px;
+}
 

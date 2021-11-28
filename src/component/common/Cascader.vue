@@ -36,7 +36,7 @@ export default {
   methods: {
     // 获取父级分类的数据
     async getParentCateList() {
-      const res = await getCategories(2)
+      const res = await getCategories()
       if (res.meta.status != 200)
         return this.$message.error('获取父级分类失败：' + res.meta.msg)
       this.parentCateList = res.data

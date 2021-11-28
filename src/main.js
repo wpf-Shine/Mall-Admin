@@ -9,6 +9,15 @@ import '@/assets/fonts/iconfont.css'
 import '@/assets/css/global.css'
 import TreeTable from 'vue-table-with-tree-grid'
 
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor, /* { default global options } */)
+
 import axios from 'axios'
 // 配置请求的跟路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
