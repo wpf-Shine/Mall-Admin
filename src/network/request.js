@@ -1,4 +1,5 @@
 import axios from 'axios'
+import NProgress from 'nprogress'
 
 export function request(config) {
   //创建axios实例
@@ -10,6 +11,7 @@ export function request(config) {
   // axios拦截器
   // 请求拦截
   instance.interceptors.request.use(config => {
+    NProgress.start()
     config.headers.Authorization = window.sessionStorage.getItem('token')
     return config
   }), err => {
@@ -17,6 +19,7 @@ export function request(config) {
   }
   // 响应拦截
   instance.interceptors.response.use(res => {
+    NProgress.done()
     return res.data
   }), err => {
 
